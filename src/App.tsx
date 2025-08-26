@@ -15,7 +15,7 @@ import {
 } from "@heroicons/react/16/solid";
 import "./App.css";
 
-const API_KEY = "O10aHgUThs9QtlSnv0LJWbM2gNfnYbnRUGwsYzpO";
+const API_KEY = "";
 
 const response = {
   copyright: "\nAndrea Girones\n",
@@ -42,6 +42,9 @@ function App() {
         if (!response) {
           throw error;
         }
+        // const response = await fetch(
+        //   `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${currentdate.year}-${currentdate.month}-${currentdate.day}`
+        // );
         let image = response;
         setCurrentImage(image);
       } catch (e) {
