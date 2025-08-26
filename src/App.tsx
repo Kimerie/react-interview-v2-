@@ -78,38 +78,37 @@ function App() {
 
   return (
     <>
-      <div className=" container flex justify-center mx-auto min-h-screen py-8">
-        <div className="relative max-w-lg mx-auto">
+      <div className="container flex justify-center mx-auto min-h-screen p-8">
+        <div className="relative max-w-xl mx-auto">
           <Card>
-            <CardHeader>
+            <CardHeader className="text-center">
               <CardTitle>NASA Picture of Day</CardTitle>
 
-              {currentImage.title && !loading && (
-                <>
-                  <h3>{currentImage.title}</h3>
-                  <Button
-                    onClick={handlePastClick}
-                    className="bg-black text-white w-2 h-2"
-                  >
-                    <ChevronLeftIcon />
-                  </Button>
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  onClick={handlePastClick}
+                  className="bg-black text-white w-2 h-2 items-center"
+                >
+                  <ChevronLeftIcon />
+                </Button>
 
-                  <span>{`${currentDate.year}-${currentDate.month}-${currentDate.day}`}</span>
+                <span>{`${currentDate.year}-${currentDate.month}-${currentDate.day}`}</span>
 
-                  <Button
-                    onClick={handleFutureClick}
-                    disabled={!canGoForward()}
-                    className="bg-black text-white w-2 h-2"
-                  >
-                    <ChevronRightIcon />
-                  </Button>
-                </>
-              )}
+                <Button
+                  onClick={handleFutureClick}
+                  disabled={!canGoForward()}
+                  className="bg-black text-white w-2 h-2"
+                >
+                  <ChevronRightIcon />
+                </Button>
+              </div>
+
+              {currentImage.title && !loading && <h3>{currentImage.title}</h3>}
             </CardHeader>
             {!currentImage && loading && <div>Loading...</div>}
             {error && <div>{error}</div>}
-            {currentImage && !loading && (
-              <CardContent>
+            {currentImage.url && !loading && (
+              <CardContent className="p-6">
                 <img src={currentImage.url} width={500} />
                 <CardDescription className="py-2">
                   {currentImage.explanation}
