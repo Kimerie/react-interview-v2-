@@ -8,11 +8,7 @@ import {
   CardDescription,
   CardContent,
 } from "./components/ui/card";
-import {
-  ChevronRightIcon,
-  ChevronDoubleLeftIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/16/solid";
+import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/16/solid";
 import "./App.css";
 
 const API_KEY = "";
@@ -40,7 +36,8 @@ function App() {
       setLoading(true);
       try {
         if (!response) {
-          throw error;
+          // throw new Error(response.status);
+          throw new Error("Server Error. Please try again later.");
         }
         // const response = await fetch(
         //   `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${currentdate.year}-${currentdate.month}-${currentdate.day}`
@@ -78,44 +75,56 @@ function App() {
 
   return (
     <>
-      <div className="container flex justify-center mx-auto min-h-screen p-8">
-        <div className="relative max-w-xl mx-auto">
-          <Card>
-            <CardHeader className="text-center">
-              <CardTitle>NASA Picture of Day</CardTitle>
+      <div className="min-h-screen flex items-center justify-center p-8">
+        <div className="flex flex-col row-start-2 gap-8 items-center ">
+          <div className="relative min-w-96 max-w-xl mx-auto">
+            <Card>
+              <CardHeader className="text-center">
+                <CardTitle>NASA Picture of Day</CardTitle>
 
-              <div className="flex items-center justify-center gap-4">
-                <Button
-                  onClick={handlePastClick}
-                  className="bg-black text-white w-2 h-2 items-center"
-                >
-                  <ChevronLeftIcon />
-                </Button>
+                <div className="flex items-center justify-center gap-4">
+                  <Button
+                    onClick={handlePastClick}
+                    className="bg-black text-white w-2 h-2 items-center"
+                  >
+                    <ChevronLeftIcon />
+                  </Button>
 
-                <span>{`${currentDate.year}-${currentDate.month}-${currentDate.day}`}</span>
+                  <span>{`${currentDate.year}-${currentDate.month}-${currentDate.day}`}</span>
 
-                <Button
-                  onClick={handleFutureClick}
-                  disabled={!canGoForward()}
-                  className="bg-black text-white w-2 h-2"
-                >
-                  <ChevronRightIcon />
-                </Button>
-              </div>
+                  <Button
+                    onClick={handleFutureClick}
+                    disabled={!canGoForward()}
+                    className="bg-black text-white w-2 h-2"
+                  >
+                    <ChevronRightIcon />
+                  </Button>
+                </div>
 
-              {currentImage.title && !loading && <h3>{currentImage.title}</h3>}
-            </CardHeader>
-            {!currentImage && loading && <div>Loading...</div>}
-            {error && <div>{error}</div>}
-            {currentImage.url && !loading && (
+                {currentImage.title && !loading && (
+                  <h3>{currentImage.title}</h3>
+                )}
+              </CardHeader>
               <CardContent className="p-6">
-                <img src={currentImage.url} width={500} />
-                <CardDescription className="py-2">
-                  {currentImage.explanation}
-                </CardDescription>
+                {!currentImage && loading && <div>Loading...</div>}
+                {error && <div>{error}</div>}
+                {currentImage.url && !loading && (
+                  <>
+                    <div className="overflow-hidden w-full h-96 rounded-lg">
+                      <img
+                        src={currentImage.url}
+                        className="w-full h-full object-cover"
+                        alt={currentImage.title || "NASA Photo of the Day"}
+                      />
+                    </div>
+                    <CardDescription className="p-2 mt-6">
+                      {currentImage.explanation}
+                    </CardDescription>
+                  </>
+                )}
               </CardContent>
-            )}
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     </>
