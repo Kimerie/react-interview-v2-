@@ -55,61 +55,66 @@ function App() {
     fetchNasaApod();
   }, [currentDate]);
 
-  let handlePastClick = () => {
-    let past = currentDate.minus({ days: 1 });
-    console.log(past);
+  const handlePastClick = () => {
+    if (loading) return;
+    const past = currentDate.minus({ days: 1 });
     setCurrentDate(past);
   };
 
-  let canGoForward = () => {
-    if (currentDate > today) return false;
+  const handleFutureClick = () => {
+    if (loading) return;
+    const future = currentDate.plus({ days: 1 });
+    setCurrentDate(future);
   };
 
-  let handleFutureClick = () => {
-    if (!canGoForward()) return;
-    let future = currentDate.plus({ days: 1 }).day;
-    setCurrentDate(future);
+  const canGoForward = () => {
+    const todayStart = today.startOf("day");
+    const currentStart = currentDate.startOf("day");
+    return currentStart < todayStart;
   };
 
   return (
     <>
-      <div className=" container flex mx-auto min-h-full py-8">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle>NASA Picture of Day</CardTitle>
+      <div className=" container flex justify-center mx-auto min-h-screen py-8">
+        <div className="relative max-w-lg mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>NASA Picture of Day</CardTitle>
 
-            {currentImage.title && !loading && (
-              <>
-                <h3>{currentImage.title}</h3>
-                <button
-                  onClick={handlePastClick}
-                  className="bg-black text-white w-2 h-2"
-                >
-                  <ChevronLeftIcon />
-                </button>
+              {currentImage.title && !loading && (
+                <>
+                  <h3>{currentImage.title}</h3>
+                  <Button
+                    onClick={handlePastClick}
+                    className="bg-black text-white w-2 h-2"
+                  >
+                    <ChevronLeftIcon />
+                  </Button>
 
-                <span>{`${currentDate.year}-${currentDate.month}-${currentDate.day}`}</span>
+                  <span>{`${currentDate.year}-${currentDate.month}-${currentDate.day}`}</span>
 
-                <button
-                  onClick={handleFutureClick}
-                  className="bg-black text-white w-2 h-2"
-                >
-                  <ChevronRightIcon />
-                </button>
-              </>
+                  <Button
+                    onClick={handleFutureClick}
+                    disabled={!canGoForward()}
+                    className="bg-black text-white w-2 h-2"
+                  >
+                    <ChevronRightIcon />
+                  </Button>
+                </>
+              )}
+            </CardHeader>
+            {!currentImage && loading && <div>Loading...</div>}
+            {error && <div>{error}</div>}
+            {currentImage && !loading && (
+              <CardContent>
+                <img src={currentImage.url} width={500} />
+                <CardDescription className="py-2">
+                  {currentImage.explanation}
+                </CardDescription>
+              </CardContent>
             )}
-          </CardHeader>
-          {!currentImage && loading && <div>Loading...</div>}
-          {error && <div>{error}</div>}
-          {currentImage && !loading && (
-            <CardContent>
-              <img src={currentImage.url} width={500} />
-              <CardDescription className="py-2">
-                {currentImage.explanation}
-              </CardDescription>
-            </CardContent>
-          )}
-        </Card>
+          </Card>
+        </div>
       </div>
     </>
   );
